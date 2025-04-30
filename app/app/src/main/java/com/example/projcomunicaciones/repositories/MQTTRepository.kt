@@ -1,8 +1,6 @@
 package com.example.projcomunicaciones.repositories
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.example.projcomunicaciones.models.EspData
 import com.example.projcomunicaciones.viewmodels.MainActivityViewModel
 import com.google.gson.Gson
@@ -13,6 +11,8 @@ class MQTTRepository(private val serverUrl: String, private val viewModel: MainA
     private lateinit var client: MqttClient
     private val clientId = MqttClient.generateClientId()
     private lateinit var options: MqttConnectOptions
+    private val esp32Coords:String="ufpsesp32/coords"
+    private val esp32Logs:String="ufpsesp32/logs"
     init {
         val persistence = MemoryPersistence()
         client = MqttClient(serverUrl, clientId, persistence)
@@ -23,7 +23,7 @@ class MQTTRepository(private val serverUrl: String, private val viewModel: MainA
 
                 try {
                     // Suscripción automática al conectarse
-                    client.subscribe("ufpsesp32/coords")
+                    client.subscribe(esp32Coords)
                     Log.i("MQTT", "Suscripción exitosa al topic")
                 } catch (e: MqttException) {
                     Log.e("MQTT", "Error al suscribirse al topic", e)
@@ -36,8 +36,13 @@ class MQTTRepository(private val serverUrl: String, private val viewModel: MainA
 
             override fun messageArrived(topic: String?, message: MqttMessage?) {
                 val json=message.toString()
-                val espData=Gson().fromJson(json,EspData::class.java)
-                viewModel.updateEspData(espData)
+                when(topic){
+                    esp32Coords-> {
+                        val espData=Gson().fromJson(json,EspData::class.java)
+                        viewModel.updateLocation(espData)
+                    }
+                    esp32Logs-> viewModel.updateLogs(json)
+                }
             }
 
             override fun deliveryComplete(token: IMqttDeliveryToken?) {

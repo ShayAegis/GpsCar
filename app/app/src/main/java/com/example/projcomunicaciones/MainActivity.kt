@@ -2,10 +2,8 @@ package com.example.projcomunicaciones
 
 import android.animation.ValueAnimator
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
@@ -18,7 +16,6 @@ import org.osmdroid.views.MapController
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.MapEventsOverlay
 import org.osmdroid.views.overlay.Marker
-import org.osmdroid.views.overlay.Overlay
 import org.osmdroid.views.overlay.OverlayManager
 
 class MainActivity : ComponentActivity() {
@@ -26,6 +23,7 @@ class MainActivity : ComponentActivity() {
     lateinit var mapView:MapView
     lateinit var mapController: MapController
     lateinit var mapOverlays:OverlayManager
+    lateinit var logsTV:TextView
     var selectedLocation:GeoPoint?=null
     val cucutaGeopoint=GeoPoint(7.889325709440754, -72.49674315409291)
     private val vm: MainActivityViewModel by viewModels()
@@ -34,6 +32,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         publishBtn=findViewById(R.id.btPublish)
+        logsTV=findViewById(R.id.tvEspLogs)
         loadMap(18,cucutaGeopoint)
         vm.connectMQTT()
     }
@@ -45,11 +44,14 @@ class MainActivity : ComponentActivity() {
                 vm.sendMQTT(selectedLocation)
             }
         }
-        vm.espLiveData.observe(this, Observer{espData->
+        vm.espLiveLocation.observe(this) { espData ->
             espData?.let {
-                addPositionMarker(it.fetchLat(),it.fetchLong(),it.fetchSpeed())
+                addPositionMarker(it.fetchLat(), it.fetchLong(), it.fetchSpeed())
             }
-        })
+        }
+        vm.espLiveLogs.observe(this) { logs ->
+            logsTV.setText(logs)
+        }
         vm.connectedStatus.observe(this,{connected->
             val connectedTv=findViewById<TextView>(R.id.tvStatusMQTT)
             if(connected)
