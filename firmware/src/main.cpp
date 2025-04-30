@@ -117,6 +117,7 @@ const char* mosquitto_host = "test.mosquitto.org";
 const int port = 1883;
 const char* sendTopic = "ufpsesp32/coords";
 const char* receiveTopic = "ufpsclient/sentCoords";
+const char* logsTopic = "ufpsesp32/logs";
 
 unsigned long lastTimeSent = 0;
 int sendInterval = 5000;  
@@ -156,8 +157,8 @@ void callback(char* topic, byte* payload, unsigned int length) {
   }
 }
 
-bool pubMQTT(String msg) {
-  return mqtt.publish(sendTopic, msg.c_str());
+bool pubMQTT(const char* topic,String msg) {
+  return mqtt.publish(topic, msg.c_str());
 }
 
 String serializeData(){
@@ -205,7 +206,7 @@ void loop() {
   String data = serializeData();
 
   if (millis() - lastTimeSent >= sendInterval) {
-    if (pubMQTT(data))
+    if (pubMQTT(sendTopic,data))
       Serial.printf("[Published] %s \n", data.c_str());
     lastTimeSent = millis();
   }
@@ -245,7 +246,10 @@ bool alignDirection(int targetDirection) {
     if (error > 180) error -= 360;
     if (error < -180) error += 360;
 
-    Serial.printf("[Ajustando orientación] %.2f°, [Error] %.2f°\n", orientation, error);
+    char buffer[100];
+    snprintf(buffer, sizeof(buffer), "[Ajustando orientación] %.2f°, [Error] %.2f°\n", orientation, error);
+    String orientationLog = String(buffer);    
+    pubMQTT(logsTopic,orientationLog);
 
     if (fabs(error) <= tolerance) {
       Serial.println("[Direction] Dirección alineada");
