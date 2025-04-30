@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Capa del fondo ovalado -->
+    <item>
+        <shape android:shape="oval">
+            <solid android:color="@color/teal_200" />
+        </shape>
+    </item>
+
+    <!-- Capa del ícono centrado -->
+    <item
+        android:top="20dp"
+        android:bottom="20dp"
+        android:left="20dp"
+        android:right="20dp"
+        android:drawable="@drawable/car_icon"
+        android:gravity="center" />
+</layer-list>
