@@ -8,4 +8,5 @@
     <string name="disconected_mqtt">Desconectado</string>
     <string name="navigation_drawer_open">Abrir menú de opciones</string>
     <string name="navigation_drawer_close">Cerrar menú de opciones</string>
+    <string name="logs_title">Registro del vehículo</string>
 </resources>
