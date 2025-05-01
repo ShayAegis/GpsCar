@@ -25,6 +25,7 @@ class   MainActivityViewModel:ViewModel() {
         _espLiveLocation.postValue(espData)
     }
     fun updateLogs(logs:String){
+        Log.i("Esp32Log", logs)
         _espLiveLogs.postValue(logs)
     }
      fun connectMQTT(){

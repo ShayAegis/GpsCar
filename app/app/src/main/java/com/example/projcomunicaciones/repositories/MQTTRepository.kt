@@ -7,8 +7,8 @@ import com.google.gson.Gson
 import org.eclipse.paho.client.mqttv3.*
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence
 
-class MQTTRepository(private val serverUrl: String, private val viewModel: MainActivityViewModel) {
-    private lateinit var client: MqttClient
+class   MQTTRepository(private val serverUrl: String, private val viewModel: MainActivityViewModel) {
+    private var client: MqttClient
     private val clientId = MqttClient.generateClientId()
     private lateinit var options: MqttConnectOptions
     private val esp32Coords:String="ufpsesp32/coords"
@@ -24,6 +24,7 @@ class MQTTRepository(private val serverUrl: String, private val viewModel: MainA
                 try {
                     // Suscripción automática al conectarse
                     client.subscribe(esp32Coords)
+                    client.subscribe(esp32Logs)
                     Log.i("MQTT", "Suscripción exitosa al topic")
                 } catch (e: MqttException) {
                     Log.e("MQTT", "Error al suscribirse al topic", e)
@@ -36,6 +37,7 @@ class MQTTRepository(private val serverUrl: String, private val viewModel: MainA
 
             override fun messageArrived(topic: String?, message: MqttMessage?) {
                 val json=message.toString()
+                Log.i("MQTT","Message Received $topic")
                 when(topic){
                     esp32Coords-> {
                         val espData=Gson().fromJson(json,EspData::class.java)
