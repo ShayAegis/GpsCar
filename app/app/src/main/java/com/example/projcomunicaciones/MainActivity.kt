@@ -2,10 +2,15 @@ package com.example.projcomunicaciones
 
 import android.animation.ValueAnimator
 import android.os.Bundle
+import android.view.MenuItem
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toolbar
 import androidx.activity.ComponentActivity
 import androidx.activity.viewModels
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AppCompatActivity
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
 import com.example.projcomunicaciones.viewmodels.MainActivityViewModel
 import org.osmdroid.config.Configuration
@@ -18,12 +23,15 @@ import org.osmdroid.views.overlay.MapEventsOverlay
 import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.OverlayManager
 
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
     lateinit var publishBtn:Button
     lateinit var mapView:MapView
     lateinit var mapController: MapController
     lateinit var mapOverlays:OverlayManager
     lateinit var logsTV:TextView
+    lateinit var toolbar:androidx.appcompat.widget.Toolbar
+    lateinit var drawer:DrawerLayout
+    lateinit var toggle:ActionBarDrawerToggle
     var selectedLocation:GeoPoint?=null
     val cucutaGeopoint=GeoPoint(7.889325709440754, -72.49674315409291)
     private val vm: MainActivityViewModel by viewModels()
@@ -31,6 +39,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        initToolbar()
         publishBtn=findViewById(R.id.btPublish)
         logsTV=findViewById(R.id.tvEspLogs)
         loadMap(18,cucutaGeopoint)
@@ -53,14 +62,26 @@ class MainActivity : ComponentActivity() {
             logsTV.setText(logs)
         }
         vm.connectedStatus.observe(this,{connected->
-            val connectedTv=findViewById<TextView>(R.id.tvStatusMQTT)
             if(connected)
-                connectedTv.setText("Conectado")
+                toolbar.title=getString(R.string.conected_mqtt)
             else {
-                connectedTv.setText("Desconectado")
+                toolbar.title=getString(R.string.disconected_mqtt)
             }
         })
     }
+
+    private fun initToolbar(){
+        toolbar = findViewById(R.id.main_toolbar)
+        setSupportActionBar(toolbar)
+
+        drawer=findViewById(R.id.drawer_layout)
+        toggle=ActionBarDrawerToggle(this,drawer,toolbar,R.string.navigation_drawer_open,R.string.navigation_drawer_close)
+        drawer.addDrawerListener(toggle)
+        toggle.syncState()
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setHomeAsUpIndicator(R.drawable.navigation_view_icon)
+    }
+
     private fun loadMap(zoom:Int,center:GeoPoint){
         mapView=findViewById(R.id.mvMapView)
         mapView.setMultiTouchControls(true)
