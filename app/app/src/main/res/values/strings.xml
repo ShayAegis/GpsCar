@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">projcomunicaciones</string>
+    <string name="menu_test_compass">Prueba de brújula</string>
+    <string name="menu_settings">Configuración</string>
+    <string name="menu_submenu_sensors">Sensores</string>
+    <string name="conecting_mqtt">Conectando...</string>
+    <string name="conected_mqtt">Conectado</string>
+    <string name="disconected_mqtt">Desconectado</string>
+    <string name="navigation_drawer_open">Abrir menú de opciones</string>
+    <string name="navigation_drawer_close">Cerrar menú de opciones</string>
 </resources>

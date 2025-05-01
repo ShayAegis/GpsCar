@@ -1,67 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <TextView
-        android:id="@+id/tvStatusMQTT"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
+    android:id="@+id/drawer_layout"
+    tools:openDrawer="start">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <org.osmdroid.views.MapView
+            android:id="@+id/mvMapView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/brLogs">
+        </org.osmdroid.views.MapView>
+        <Button
+            android:id="@+id/btPublish"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/brLogs"
+            android:layout_margin="20dp"
+            android:background="@drawable/round_btn"/>
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/glLogsGuide"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.85"/>
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/brLogs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="top"
+            app:constraint_referenced_ids="glLogsGuide"/>
+        <TextView
+            android:id="@+id/tvEspLogs"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/brLogs"
+            android:background="#393b40"
+            android:textColor="#a1a1a1"
+            android:padding="20dp"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/nav_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/black"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:padding="10dp"
-        android:text="Conectando..."
-        android:textStyle="bold"
-        android:textAlignment="center"
-        android:textColor="@color/white"
-        android:textSize="20sp"/>
-    <androidx.constraintlayout.widget.Barrier
-        android:id="@+id/brTVStatusMQTT"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:barrierDirection="bottom"
-        app:constraint_referenced_ids="tvStatusMQTT"/>
-    <org.osmdroid.views.MapView
-        android:id="@+id/mvMapView"
+        android:layout_gravity="start"
+        app:menu="@menu/activity_main_drawer" />
+    <include
+        layout="@layout/app_bar_main"
+        android:id="@+id/app_bar_main"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@id/tvStatusMQTT"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toBottomOf="@id/brLogs"/>
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/glLogsGuide"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.85"/>
-    <androidx.constraintlayout.widget.Barrier
-        android:id="@+id/brLogs"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:barrierDirection="top"
-        app:constraint_referenced_ids="glLogsGuide"/>
-    <Button
-        android:id="@+id/btPublish"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toBottomOf="@id/brLogs"
-        android:layout_margin="20dp"
-        android:background="@drawable/round_btn"/>
-    <TextView
-        android:id="@+id/tvEspLogs"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/brLogs"
-        android:background="#393b40"
-        android:textColor="#a1a1a1"
-        android:padding="20dp"/>
+        android:layout_height="wrap_content"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.drawerlayout.widget.DrawerLayout>
