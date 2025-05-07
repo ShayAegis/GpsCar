@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.projcomunicaciones.models.Command
 import com.example.projcomunicaciones.models.Coords
 import com.example.projcomunicaciones.models.EspData
 import com.example.projcomunicaciones.repositories.MQTTRepository
@@ -33,14 +34,23 @@ class   MainActivityViewModel:ViewModel() {
                 _connectedStatus.postValue(true)
         }
     }
-    fun sendMQTT(location:GeoPoint?){
+    fun sendLocationMQTT(location:GeoPoint?,topic:String){
         val lat=location!!.latitude
         val lon=location!!.longitude
-        val sendCoords=Coords(lat,lon)
-        val json= Gson().toJson(sendCoords)
+        val coords=Coords(lat,lon)
+        val data=Command("translation",coords)
+        val json= Gson().toJson(data)
+        pubMQTT(json,topic)
+    }
+    fun sendOrientationMQTT(orientation:Float,topic: String){
+        val data= Command("orientation",orientation)
+        val json=Gson().toJson(data)
+        pubMQTT(json,topic)
+    }
+    private fun pubMQTT(data:String,topic:String){
         Log.d("MQTT", "Publishing to MQTT...")
         viewModelScope.launch(Dispatchers.IO){
-            if(mqtt.publishMessage("ufpsclient/sentCoords",json))
+            if(mqtt.publishMessage(topic,data))
                 Log.i("MQTT","Message Published~")
         }
     }

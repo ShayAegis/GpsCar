@@ -9,4 +9,11 @@
     <string name="navigation_drawer_open">Abrir menú de opciones</string>
     <string name="navigation_drawer_close">Cerrar menú de opciones</string>
     <string name="logs_title">Registro del vehículo</string>
+    <string name="align_north">Norte</string>
+    <string name="align_south">Sur</string>
+    <string name="align_easth">Este</string>
+    <string name="align_west">Oeste</string>
+    <string name="send_coordinates_description">Enviar coordenadas al carro</string>
+    <string name="compass_test_activity_title">Prueba de Brújula</string>
+    <string name="compass_test_activity_description">Presione alguno de los botones para orientar el carro en esa dirección, de esa forma puede determinar si la brújula se encuentra correctamente calibrada</string>
 </resources>

@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
+        android:id="@+id/nav_map"
+        android:title="Mapa"
+        android:icon="@drawable/map_location_icon"/>
+    <item
         android:id="@+id/submenu_sensors"
         android:title="@string/menu_submenu_sensors">
         <menu>
-            <item android:id="@+id/compassTest"
+            <item android:id="@+id/nav_compass_test"
                 android:title="@string/menu_test_compass"
                 android:icon="@drawable/ic_menu_compass"/>
         </menu>
     </item>
     <item android:id="@+id/settings"
-        android:title="@string/menu_settings"/>
+        android:title="@string/menu_settings"
+        android:icon="@drawable/settings_icon"/>
 </menu>
