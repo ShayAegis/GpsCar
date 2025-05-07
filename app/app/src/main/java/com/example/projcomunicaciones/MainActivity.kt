@@ -1,18 +1,21 @@
 package com.example.projcomunicaciones
 
 import android.animation.ValueAnimator
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.widget.Button
+import android.widget.ScrollView
 import android.widget.TextView
-import android.widget.Toolbar
-import androidx.activity.ComponentActivity
 import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.lifecycle.Observer
 import com.example.projcomunicaciones.viewmodels.MainActivityViewModel
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.navigation.NavigationView
 import org.osmdroid.config.Configuration
 import org.osmdroid.config.IConfigurationProvider
 import org.osmdroid.events.MapEventsReceiver
@@ -23,8 +26,8 @@ import org.osmdroid.views.overlay.MapEventsOverlay
 import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.OverlayManager
 
-class MainActivity : AppCompatActivity() {
-    lateinit var publishBtn:Button
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+    lateinit var publishBtn:FloatingActionButton
     lateinit var mapView:MapView
     lateinit var mapController: MapController
     lateinit var mapOverlays:OverlayManager
@@ -50,7 +53,7 @@ class MainActivity : AppCompatActivity() {
         super.onStart()
         publishBtn.setOnClickListener{
             selectedLocation?.let {
-                vm.sendMQTT(selectedLocation)
+                vm.sendLocationMQTT(selectedLocation,"ufpsclient/sentCoords")
             }
         }
         vm.espLiveLocation.observe(this) { espData ->
@@ -59,7 +62,9 @@ class MainActivity : AppCompatActivity() {
             }
         }
         vm.espLiveLogs.observe(this) { logs ->
-            logsTV.setText(logs)
+            val scrollview=findViewById<ScrollView>(R.id.scroll_view_logs)
+            logsTV.append(logs)
+            scrollview.smoothScrollTo(0,scrollview.getBottom())
         }
         vm.connectedStatus.observe(this,{connected->
             if(connected)
@@ -70,6 +75,10 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
+    private fun callCompassTest(){
+        intent= Intent(this,CompassTest::class.java)
+        startActivity(intent)
+    }
     private fun initToolbar(){
         toolbar = findViewById(R.id.main_toolbar)
         setSupportActionBar(toolbar)
@@ -80,6 +89,12 @@ class MainActivity : AppCompatActivity() {
         toggle.syncState()
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.navigation_view_icon)
+        initNavigationMenu()
+
+    }
+    private fun initNavigationMenu(){
+        val navView:NavigationView = findViewById(R.id.nav_view)
+        navView.setNavigationItemSelectedListener(this)
     }
 
     private fun loadMap(zoom:Int,center:GeoPoint){
@@ -194,6 +209,13 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+    override fun onNavigationItemSelected(item:MenuItem):Boolean{
+        when(item.itemId){
+            R.id.nav_compass_test -> callCompassTest()
+        }
+        drawer.closeDrawer(GravityCompat.START)
+        return true
     }
 }
 

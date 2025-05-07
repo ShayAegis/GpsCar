@@ -143,18 +143,34 @@ void callback(char* topic, byte* payload, unsigned int length) {
   }
 
   StaticJsonDocument<256> coords;
-  deserializeJson(coords, message);
-  double latDestination = coords["lat"];
-  double lonDestination = coords["lon"];
-
-  Serial.printf("[Android] %s\n", message.c_str());
+  DeserializationError error = deserializeJson(coords, message);
+  if (error) {
+      Serial.print("Failed to deserialize JSON: ");
+      Serial.println(error.f_str());
+      return;
+  }
+  
+  if (coords.containsKey("command")) {
+      const char* command = coords["command"];
+      
+      if (strcmp(command, "translation") == 0 && coords.containsKey("value")) {
+          double latDestination = coords["value"]["lat"];
+          double lonDestination = coords["value"]["lon"];
+          Serial.printf("[Android] %s\n", message.c_str());
+          float bearing = calculateBearing(lat, lon, latDestination, lonDestination);
+          if (alignDirection(bearing)) {
+              UTMCoordinates projDestination = LatLonToUTM(latDestination, lonDestination);
+              translateDestination(projDestination);
+          }
+      } 
+      else if (strcmp(command, "orientation") == 0 && coords.containsKey("value")) {
+          float orientation = coords["value"];
+          alignDirection(orientation);
+      }
+  }
 
   
-  float bearing=calculateBearing(lat, lon, latDestination, lonDestination);
-  if(alignDirection(bearing)){
-    UTMCoordinates projDestination=LatLonToUTM(latDestination,lonDestination);
-    translateDestination(projDestination);
-  }
+
 }
 
 bool pubMQTT(const char* topic,String msg) {

@@ -11,23 +11,39 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+        <include
+            android:id="@+id/app_bar_main"
+            layout="@layout/app_bar_main"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"/>
+
         <org.osmdroid.views.MapView
             android:id="@+id/mvMapView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent">
-        </org.osmdroid.views.MapView>
-        <Button
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/app_bar_main"
+            app:layout_constraintVertical_bias="0.285"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:src="@drawable/car_icon"
+            android:backgroundTint="@color/teal_200"
             android:id="@+id/btPublish"
             android:layout_width="60dp"
             android:layout_height="60dp"
+            android:contentDescription="@string/send_coordinates_description"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintBottom_toBottomOf="@id/brLogs"
             android:layout_margin="20dp"
-            android:background="@drawable/round_btn"/>
+            app:maxImageSize="35dp"
+
+            />
         <androidx.constraintlayout.widget.Barrier
             android:id="@+id/brLogs"
             android:layout_width="wrap_content"
@@ -36,7 +52,6 @@
             app:constraint_referenced_ids="logs_container"/>
         <LinearLayout
             android:id="@+id/logs_container"
-            xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -48,7 +63,7 @@
                 android:id="@+id/log_header"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="#212121" android:padding="8dp"
+                android:background="@color/black" android:padding="8dp"
                 android:text="@string/logs_title"
                 android:textColor="#FAFAFA" android:textSize="12sp"
                 android:textStyle="bold"
@@ -56,15 +71,18 @@
                 android:translationZ="1dp"/>
 
             <ScrollView
+                android:id="@+id/scroll_view_logs"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
-                android:background="@drawable/log_background" android:padding="8dp">
+                android:background="@drawable/log_background"
+                android:padding="8dp">
 
                 <TextView
                     android:id="@+id/tvEspLogs"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="monospace" android:textColor="#E0E0E0" android:textSize="12sp" />
+                    android:fontFamily="monospace" android:textColor="#E0E0E0"
+                    android:textSize="12sp" />
 
             </ScrollView>
 
@@ -76,10 +94,4 @@
         android:layout_height="wrap_content"
         android:layout_gravity="start"
         app:menu="@menu/activity_main_drawer" />
-    <include
-        layout="@layout/app_bar_main"
-        android:id="@+id/app_bar_main"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
 </androidx.drawerlayout.widget.DrawerLayout>
