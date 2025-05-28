@@ -6,9 +6,14 @@
 #include <TinyGPS++.h>
 #include <HardwareSerial.h>
 #include <Ultrasonic.h>
+#include <Preferences.h>
+
 
 const int SDA_PIN = 21;  
 const int SCL_PIN = 22;
+
+Preferences prefs;
+
 
 extern QMC5883LCompass compass;
 
@@ -31,4 +36,5 @@ void initSensors();
 void readGPSInfo();
 void updateGpsLed();
 float getUltrasonic(); 
+void compassCalibrate();
 #endif

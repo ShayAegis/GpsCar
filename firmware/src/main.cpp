@@ -99,6 +99,12 @@ void callback(char* topic, byte* payload, unsigned int length) {
           if(!collisionDetected)
             moveForward(motorSpeed);
     }
+      else if(strcmp(command, "calibration") == 0 && coords.containsKey("value")){
+          int calibrationStarted= coords["value"];
+          if(calibrationStarted)
+            compassCalibrate();
+          Serial.println("Starting calibration");
+      }
   }
 
   
