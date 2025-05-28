@@ -3,7 +3,7 @@ package com.example.projcomunicaciones
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
-import android.widget.Button
+import android.widget.SeekBar
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -13,27 +13,41 @@ import androidx.drawerlayout.widget.DrawerLayout
 import com.example.projcomunicaciones.viewmodels.MainActivityViewModel
 import com.google.android.material.navigation.NavigationView
 
-class CompassTest:AppCompatActivity(),NavigationView.OnNavigationItemSelectedListener {
-    private val vm: MainActivityViewModel by viewModels()
+class MotorTest :AppCompatActivity(),NavigationView.OnNavigationItemSelectedListener  {
     private lateinit var toolbar:androidx.appcompat.widget.Toolbar
+    private lateinit var motorPower:SeekBar
+    lateinit var seekBarTV:TextView
     private lateinit var drawer: DrawerLayout
-    private lateinit var toggle: ActionBarDrawerToggle
-    private lateinit var arrayButtons: Array<Button>
-    private lateinit var orientationTV: TextView
+    private lateinit var toggle:ActionBarDrawerToggle
+    private val vm: MainActivityViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.compass_test)
-        initToolbar()
+        setContentView(R.layout.motors_test)
+        motorPower = findViewById(R.id.motorSeekbar)
+        seekBarTV = findViewById(R.id.motorTV)
         vm.connectMQTT()
-        arrayButtons = arrayOf(
-            findViewById(R.id.btn_align_north),
-            findViewById(R.id.btn_align_south),
-            findViewById(R.id.btn_align_west),
-            findViewById(R.id.btn_align_east)
-        )
-        orientationTV=findViewById(R.id.tv_orientation)
-    }
+        initToolbar()
+        motorPower.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                if (fromUser) {
+                    val seekbarTextvalue= getString(R.string.motor_display,progress)
+                    seekBarTV.text = seekbarTextvalue
+                }
+            }
 
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                seekBar?.progress?.let {
+                    vm.sendCommandMQTT("motor",
+                        it.toFloat(),"ufpsclient/sentCoords")
+                }
+            }
+        })
+    }
     override fun onStart() {
         super.onStart()
         vm.connectedStatus.observe(this){connected->
@@ -41,17 +55,6 @@ class CompassTest:AppCompatActivity(),NavigationView.OnNavigationItemSelectedLis
                 toolbar.title=getString(R.string.conected_mqtt)
             else
                 toolbar.title=getString(R.string.disconected_mqtt)
-        }
-        vm.espLiveData.observe(this){espData->
-            val orientation=espData.fetchOrientation()
-            val orientationPlaceholder=getString(R.string.azimuth_display, orientation)
-            orientationTV.text = orientationPlaceholder
-        }
-        arrayButtons.forEach {button:Button->
-            button.setOnClickListener {
-                val value=button.tag.toString().toFloat()
-                vm.sendCommandMQTT("orientation",value,"ufpsclient/sentCoords")
-            }
         }
     }
     private fun initToolbar(){
@@ -69,22 +72,23 @@ class CompassTest:AppCompatActivity(),NavigationView.OnNavigationItemSelectedLis
         val navView=findViewById<NavigationView>(R.id.nav_view)
         navView.setNavigationItemSelectedListener(this)
     }
-
-    override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        when(item.itemId){
-            R.id.nav_map-> goHome()
-            R.id.nav_motor_test -> callMotorTest()
-        }
-        drawer.closeDrawer(GravityCompat.START)
-        return true
-    }
     private fun goHome(){
         val intent= Intent(this,MainActivity::class.java)
         startActivity(intent)
     }
-    private fun callMotorTest(){
-        intent= Intent(this,MotorTest::class.java)
+
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            R.id.nav_map-> goHome()
+            R.id.nav_compass_test -> callCompassTest()
+        }
+        drawer.closeDrawer(GravityCompat.START)
+        return true
+    }
+    private fun callCompassTest(){
+        intent= Intent(this,CompassTest::class.java)
         startActivity(intent)
     }
-
 }
+
+

@@ -27,6 +27,8 @@
         </activity>
         <activity android:name=".CompassTest"
             android:exported="false"/>
+        <activity android:name=".MotorTest"
+            android:exported="false"/>
     </application>
 
 </manifest>

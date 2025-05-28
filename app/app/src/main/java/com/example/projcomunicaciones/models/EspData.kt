@@ -8,7 +8,8 @@ import kotlinx.parcelize.Parcelize
 data class EspData(
     @SerializedName("lat") protected val lat: Double,
     @SerializedName("long") protected val long: Double,
-    @SerializedName("speed") protected val speed: Float
+    @SerializedName("speed") protected val speed: Float,
+    @SerializedName("orientation") protected val orientation: Float
 ) : Parcelable {
     fun fetchLat(): Double {
         return lat
@@ -20,5 +21,8 @@ data class EspData(
 
     fun fetchSpeed(): Float {
         return speed
+    }
+    fun fetchOrientation(): Float {
+        return orientation
     }
 }

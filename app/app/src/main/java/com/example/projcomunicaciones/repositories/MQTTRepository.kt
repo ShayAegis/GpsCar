@@ -41,7 +41,7 @@ class   MQTTRepository(private val serverUrl: String, private val viewModel: Mai
                 when(topic){
                     esp32Coords-> {
                         val espData=Gson().fromJson(json,EspData::class.java)
-                        viewModel.updateLocation(espData)
+                        viewModel.updateParameters(espData)
                     }
                     esp32Logs-> viewModel.updateLogs(json)
                 }

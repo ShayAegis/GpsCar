@@ -16,14 +16,14 @@ import org.osmdroid.util.GeoPoint
 class   MainActivityViewModel:ViewModel() {
     private val serverUri = "tcp://test.mosquitto.org:1883"
     val mqtt= MQTTRepository(serverUri,this)
-    private val _espLiveLocation = MutableLiveData<EspData>()
+    private val _espLiveData = MutableLiveData<EspData>()
     private val _espLiveLogs=MutableLiveData<String>()
     private val _connectedStatus=MutableLiveData<Boolean>()
-    val espLiveLocation: LiveData<EspData> get() = _espLiveLocation
+    val espLiveData: LiveData<EspData> get() = _espLiveData
     val connectedStatus: LiveData<Boolean> get() = _connectedStatus
     val espLiveLogs: LiveData<String> get()=_espLiveLogs
-    fun updateLocation(espData: EspData) {
-        _espLiveLocation.postValue(espData)
+    fun updateParameters(espData: EspData) {
+        _espLiveData.postValue(espData)
     }
     fun updateLogs(logs:String){
         Log.i("Esp32Log", logs)
@@ -43,8 +43,8 @@ class   MainActivityViewModel:ViewModel() {
         val json= Gson().toJson(data)
         pubMQTT(json,topic)
     }
-    fun sendOrientationMQTT(orientation:Float,topic: String){
-        val data= Command("orientation",orientation)
+    fun sendCommandMQTT(command: String,value:Float,topic: String){
+        val data= Command(command,value)
         val json=Gson().toJson(data)
         pubMQTT(json,topic)
     }

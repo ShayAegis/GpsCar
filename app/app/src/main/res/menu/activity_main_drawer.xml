@@ -5,12 +5,15 @@
         android:title="Mapa"
         android:icon="@drawable/map_location_icon"/>
     <item
-        android:id="@+id/submenu_sensors"
+        android:id="@+id/submenu_tests"
         android:title="@string/menu_submenu_sensors">
         <menu>
             <item android:id="@+id/nav_compass_test"
                 android:title="@string/menu_test_compass"
                 android:icon="@drawable/ic_menu_compass"/>
+            <item android:id="@+id/nav_motor_test"
+                android:title="@string/menu_test_motors"
+                android:icon="@drawable/speed_icon"/>
         </menu>
     </item>
     <item android:id="@+id/settings"

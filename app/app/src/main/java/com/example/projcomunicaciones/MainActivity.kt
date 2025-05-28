@@ -3,9 +3,7 @@ package com.example.projcomunicaciones
 import android.animation.ValueAnimator
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
-import android.widget.Button
 import android.widget.ScrollView
 import android.widget.TextView
 import androidx.activity.viewModels
@@ -27,16 +25,16 @@ import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.OverlayManager
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
-    lateinit var publishBtn:FloatingActionButton
+    private lateinit var publishBtn:FloatingActionButton
     lateinit var mapView:MapView
-    lateinit var mapController: MapController
+    private lateinit var mapController: MapController
     lateinit var mapOverlays:OverlayManager
-    lateinit var logsTV:TextView
-    lateinit var toolbar:androidx.appcompat.widget.Toolbar
-    lateinit var drawer:DrawerLayout
-    lateinit var toggle:ActionBarDrawerToggle
+    private lateinit var logsTV:TextView
+    private lateinit var toolbar:androidx.appcompat.widget.Toolbar
+    private lateinit var drawer:DrawerLayout
+    private lateinit var toggle:ActionBarDrawerToggle
     var selectedLocation:GeoPoint?=null
-    val cucutaGeopoint=GeoPoint(7.889325709440754, -72.49674315409291)
+    private val cucutaGeopoint=GeoPoint(7.889325709440754, -72.49674315409291)
     private val vm: MainActivityViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,6 +45,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         logsTV=findViewById(R.id.tvEspLogs)
         loadMap(18,cucutaGeopoint)
         vm.connectMQTT()
+
     }
 
     override fun onStart() {
@@ -56,7 +55,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 vm.sendLocationMQTT(selectedLocation,"ufpsclient/sentCoords")
             }
         }
-        vm.espLiveLocation.observe(this) { espData ->
+        vm.espLiveData.observe(this) { espData ->
             espData?.let {
                 addPositionMarker(it.fetchLat(), it.fetchLong(), it.fetchSpeed())
             }
@@ -77,6 +76,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private fun callCompassTest(){
         intent= Intent(this,CompassTest::class.java)
+        startActivity(intent)
+    }
+    private fun callMotorTest(){
+        intent= Intent(this,MotorTest::class.java)
         startActivity(intent)
     }
     private fun initToolbar(){
@@ -213,6 +216,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onNavigationItemSelected(item:MenuItem):Boolean{
         when(item.itemId){
             R.id.nav_compass_test -> callCompassTest()
+            R.id.nav_motor_test -> callMotorTest()
         }
         drawer.closeDrawer(GravityCompat.START)
         return true

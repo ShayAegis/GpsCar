@@ -14,10 +14,10 @@
         android:background="#2b2b2b">
 
         <include
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:id="@+id/app_bar_main"
             layout="@layout/app_bar_main"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -26,90 +26,96 @@
             android:id="@+id/test_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/compass_test_activity_title"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/app_bar_main"
             android:layout_margin="20dp"
+            android:text="@string/compass_test_activity_title"
+            android:textColor="@color/compass_activity_text_color"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:textColor="@color/compass_activity_text_color"/>
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/app_bar_main" />
+
         <View
             android:id="@+id/title_line"
-            app:layout_constraintTop_toBottomOf="@id/test_title"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="20dp"
-            android:background="#636363"/>
+            android:background="#636363"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/test_title" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/title_line"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            android:text="@string/compass_test_activity_description"
             android:layout_marginVertical="20dp"
             android:paddingHorizontal="20dp"
-            android:textColor="@color/compass_activity_text_color"/>
+            android:text="@string/compass_test_activity_description"
+            android:textColor="@color/compass_activity_text_color"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/title_line" />
 
         <Button
             android:id="@+id/btn_align_north"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:tag="0"
             android:text="@string/align_north"
+            android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/tv_orientation"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_chainStyle="packed"
-            android:tag="0"/>
+            app:layout_constraintVertical_chainStyle="packed" />
 
         <TextView
             android:id="@+id/tv_orientation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
-            android:text="---ª"
+            android:text="---"
+            android:textColor="@color/compass_activity_text_color"
             app:layout_constraintBottom_toTopOf="@+id/btn_align_south"
             app:layout_constraintEnd_toStartOf="@id/btn_align_east"
             app:layout_constraintStart_toEndOf="@id/btn_align_west"
-            app:layout_constraintTop_toBottomOf="@+id/btn_align_north"
-            android:textColor="@color/compass_activity_text_color"/>
+            app:layout_constraintTop_toBottomOf="@+id/btn_align_north" />
 
         <Button
             android:id="@+id/btn_align_south"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:tag="180"
             android:text="@string/align_south"
+            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_orientation"
-            android:tag="180"/>
+            app:layout_constraintTop_toBottomOf="@+id/tv_orientation" />
 
         <Button
             android:id="@+id/btn_align_west"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:tag="270"
             android:text="@string/align_west"
+            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/tv_orientation"
-            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintHorizontal_chainStyle="spread"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:tag="270"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <Button
             android:id="@+id/btn_align_east"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/align_easth"
+            android:tag="90"
+            android:text="@string/align_east"
+            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/tv_orientation"
-            app:layout_constraintTop_toTopOf="parent"
-            android:tag="90"/>
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.navigation.NavigationView

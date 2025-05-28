@@ -1,19 +1,25 @@
 <resources>
     <string name="app_name">projcomunicaciones</string>
     <string name="menu_test_compass">Prueba de brújula</string>
+    <string name="menu_test_motors">Prueba de motores</string>
     <string name="menu_settings">Configuración</string>
-    <string name="menu_submenu_sensors">Sensores</string>
+    <string name="menu_submenu_sensors">Pruebas</string>
     <string name="conecting_mqtt">Conectando...</string>
     <string name="conected_mqtt">Conectado</string>
     <string name="disconected_mqtt">Desconectado</string>
     <string name="navigation_drawer_open">Abrir menú de opciones</string>
     <string name="navigation_drawer_close">Cerrar menú de opciones</string>
     <string name="logs_title">Registro del vehículo</string>
-    <string name="align_north">Norte</string>
-    <string name="align_south">Sur</string>
-    <string name="align_easth">Este</string>
-    <string name="align_west">Oeste</string>
+    <string name="align_north">N</string>
+    <string name="align_south">S</string>
+    <string name="align_east">E</string>
+    <string name="align_west">O</string>
     <string name="send_coordinates_description">Enviar coordenadas al carro</string>
     <string name="compass_test_activity_title">Prueba de Brújula</string>
+    <string name="motor_test_activity_title">Prueba de Motores</string>
     <string name="compass_test_activity_description">Presione alguno de los botones para orientar el carro en esa dirección, de esa forma puede determinar si la brújula se encuentra correctamente calibrada</string>
+    <string name="motor_test_activity_description">Deslice el slider para varia la potencia entregada a los motores, de esa forma puede determinar la respuesta de los motores</string>
+    <string name="azimuth_display">%1$.2f º</string>
+    <string name="motor_display">%1$d%%</string>
+
 </resources>
