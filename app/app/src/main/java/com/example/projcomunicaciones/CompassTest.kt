@@ -2,6 +2,7 @@ package com.example.projcomunicaciones
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.MenuItem
 import android.widget.Button
 import android.widget.TextView
@@ -10,6 +11,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import com.example.projcomunicaciones.databinding.CompassTestLayoutBinding
 import com.example.projcomunicaciones.viewmodels.MainActivityViewModel
 import com.google.android.material.navigation.NavigationView
 
@@ -19,19 +21,21 @@ class CompassTest:AppCompatActivity(),NavigationView.OnNavigationItemSelectedLis
     private lateinit var drawer: DrawerLayout
     private lateinit var toggle: ActionBarDrawerToggle
     private lateinit var arrayButtons: Array<Button>
-    private lateinit var orientationTV: TextView
+    private lateinit var binding:CompassTestLayoutBinding
+    val commandTopic="ufpsclient/sentCoords"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.compass_test)
+        binding=CompassTestLayoutBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         initToolbar()
         vm.connectMQTT()
         arrayButtons = arrayOf(
-            findViewById(R.id.btn_align_north),
-            findViewById(R.id.btn_align_south),
-            findViewById(R.id.btn_align_west),
-            findViewById(R.id.btn_align_east)
+            binding.btnAlignNorth,
+            binding.btnAlignEast,
+            binding.btnAlignWest,
+            binding.btnAlignSouth
         )
-        orientationTV=findViewById(R.id.tv_orientation)
+        binding.btnCalibration.setOnClickListener { startCalibration() }
     }
 
     override fun onStart() {
@@ -45,12 +49,12 @@ class CompassTest:AppCompatActivity(),NavigationView.OnNavigationItemSelectedLis
         vm.espLiveData.observe(this){espData->
             val orientation=espData.fetchOrientation()
             val orientationPlaceholder=getString(R.string.azimuth_display, orientation)
-            orientationTV.text = orientationPlaceholder
+            binding.tvOrientation.text = orientationPlaceholder
         }
         arrayButtons.forEach {button:Button->
             button.setOnClickListener {
                 val value=button.tag.toString().toFloat()
-                vm.sendCommandMQTT("orientation",value,"ufpsclient/sentCoords")
+                vm.sendCommandMQTT("orientation",value,commandTopic)
             }
         }
     }
@@ -86,5 +90,7 @@ class CompassTest:AppCompatActivity(),NavigationView.OnNavigationItemSelectedLis
         intent= Intent(this,MotorTest::class.java)
         startActivity(intent)
     }
-
+    private fun startCalibration(){
+        vm.sendCommandMQTT("calibration",true,commandTopic)
+    }
 }

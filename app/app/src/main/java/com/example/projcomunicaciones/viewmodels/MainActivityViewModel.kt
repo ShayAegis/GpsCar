@@ -43,7 +43,7 @@ class   MainActivityViewModel:ViewModel() {
         val json= Gson().toJson(data)
         pubMQTT(json,topic)
     }
-    fun sendCommandMQTT(command: String,value:Float,topic: String){
+    fun sendCommandMQTT(command: String,value:Any,topic: String){
         val data= Command(command,value)
         val json=Gson().toJson(data)
         pubMQTT(json,topic)

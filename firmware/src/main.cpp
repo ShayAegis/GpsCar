@@ -11,8 +11,8 @@ bool executed = false;
 void alignDirection();
 void translateDestination();
 WiFiClient espClient;
-const char* ssid = "FAMILIA RINCON";
-const char* password = "crisanrimor";
+const char* ssid = "HUAWEI Y9 2019";
+const char* password = "123456789";
 
 
 void connectWifi() {
@@ -284,6 +284,7 @@ void scanSurroundings(){
   }
 
   pubMQTT(logsTopic,"[Ultrasonic] Avoid obstacle at "+String(directionAngle)+" distance "+String(maxDistance));
+  Serial.println("[Ultrasonic] Avoid obstacle at "+String(directionAngle)+" distance "+String(maxDistance));
   targetOrientation = readCompass()+mapServoToAzimuth(directionAngle);                                                                                                     
   alignStarted = true;           
   translationStarted = false;   
