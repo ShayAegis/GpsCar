@@ -51,7 +51,7 @@ void setupMotors(){
       digitalWrite(motorOutputs[output], state);
     }
   
-    int steps = map(constrain(errorMagnitude, 0, 90), 0, 90, 3, 10); // Igual que turnRight
+    int steps = map(constrain(errorMagnitude, 0, 90), 0, 90, 3, 10); 
     int minPower = 120;
     int maxPower = 200;
   
@@ -77,11 +77,24 @@ void setupMotors(){
   
   void moveForward(float maxSpeed){
     for (int output = 0; output < 4; output++) {
-        int state = (output == 1 || output == 2) ? LOW : HIGH; 
-        digitalWrite(motorOutputs[output], state);
-      }
-    ledcWrite(enaChannel,maxSpeed*0.99);
-    ledcWrite(enbChannel,maxSpeed); 
+      int state = (output == 1 || output == 2) ? LOW : HIGH; 
+      digitalWrite(motorOutputs[output], state);
+    }
+  
+    float currentSpeed = 0;
+    float rampDuration = 500;  
+    int rampSteps = 50;      
+    float dt = rampDuration / rampSteps;
+  
+    for (int i = 0; i <= rampSteps; i++) {
+      float progress = (float)i / rampSteps;
+      currentSpeed = maxSpeed * (1 - exp(-5 * progress)); 
+  
+      ledcWrite(enaChannel, currentSpeed * 0.99);
+      ledcWrite(enbChannel, currentSpeed);
+  
+      delay(dt);
+    }
   }
   void moveReverse(float maxSpeed){
     for (int output = 0; output < 4; output++) {
@@ -99,7 +112,15 @@ void setupMotors(){
     ledcWrite(enaChannel,0);
     ledcWrite(enbChannel,0);
   }
-  
+  void calibrationTurn(){
+    const byte turnSpeed=150;
+    for (int output = 0; output < 4; output++) {
+      int state = (output == 1 || output == 3) ? HIGH : LOW;
+      digitalWrite(motorOutputs[output], state);
+    }    
+    ledcWrite(enaChannel,turnSpeed);
+    ledcWrite(enbChannel,turnSpeed*1.1);
+  }
   void servoTest(){
     for (int i = 25; i <= 135; i++) {
         servo.write(i);

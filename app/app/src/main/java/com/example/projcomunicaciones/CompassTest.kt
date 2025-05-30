@@ -1,11 +1,16 @@
 package com.example.projcomunicaciones
 
+import android.app.Activity
+import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -92,5 +97,15 @@ class CompassTest:AppCompatActivity(),NavigationView.OnNavigationItemSelectedLis
     }
     private fun startCalibration(){
         vm.sendCommandMQTT("calibration",true,commandTopic)
+        val dialog = Dialog(this)
+        dialog.setContentView(R.layout.loading_dialog)
+        dialog.setCancelable(false)
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialog.show()
+
+        Handler(Looper.getMainLooper()).postDelayed({
+            dialog.dismiss()
+            Toast.makeText(this,getString(R.string.calibration_completed),Toast.LENGTH_LONG).show()
+        }, 10000)
     }
 }

@@ -11,8 +11,8 @@ bool executed = false;
 void alignDirection();
 void translateDestination();
 WiFiClient espClient;
-const char* ssid = "HUAWEI Y9 2019";
-const char* password = "123456789";
+const char* ssid = "FAMILIA RINCON";
+const char* password = "crisanrimor";
 
 
 void connectWifi() {
@@ -207,16 +207,22 @@ void translateDestination(){
     float orientation=readCompass();
     UTMCoordinates location=LatLonToUTM(lat,lon);
     double distance=calculateDistance(location,targetDestination);
-    motorSpeed=200;
+    const float orientationDeviationTolerance=10.0f;
+    motorSpeed=180;
 
     static bool translationInProgress=false;
+      if(alignStarted){
+        stopCar();
+        translationInProgress = false;  // Reinicia para que al acabar la alineación pueda arrancar
+        return;
+    }
     if(!translationInProgress){
       translationInProgress=true;
       Serial.printf("[Translation] Distance: %.2f \n",distance);
       moveForward(motorSpeed); 
     }
     else{
-      if(fabs(orientation - targetOrientation) > orientationTolerance){
+      if(fabs(targetOrientation - orientation ) > orientationDeviationTolerance){
         stopCar();
         alignStarted=true;
       }
@@ -226,7 +232,6 @@ void translateDestination(){
           pubMQTT(logsTopic, "[Translation] Objetivo alcanzado.");
         
       }
-        
     }
 }
 
@@ -293,6 +298,5 @@ void scanSurroundings(){
   Serial.println("[Ultrasonic] Avoid obstacle at "+String(directionAngle)+" distance "+String(maxDistance));
   targetOrientation = readCompass()+mapServoToAzimuth(directionAngle);                                                                                                     
   alignStarted = true;           
-  translationStarted = false;   
   servo.write(90);             
 }

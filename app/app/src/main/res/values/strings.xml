@@ -18,9 +18,11 @@
     <string name="compass_test_activity_title">Prueba de Brújula</string>
     <string name="compass_test_calibrate">Calibrar brújula</string>
     <string name="calibration_subtitle">El entorno donde se encuentra el carro puede tener interferencias electromagnéticas que afectan la medición, se recomienda calibrar si las mediciones no son correctas</string>
+    <string name="calibration_inprogress">Calibrando brújula</string>
+    <string name="calibration_completed">Calibración completada</string>
     <string name="motor_test_activity_title">Prueba de Motores</string>
     <string name="compass_test_activity_description">Presione alguno de los botones para orientar el carro en esa dirección, de esa forma puede determinar si la brújula se encuentra correctamente calibrada</string>
-    <string name="motor_test_activity_description">Deslice el slider para varia la potencia entregada a los motores, de esa forma puede determinar la respuesta de los motores</string>
+    <string name="motor_test_activity_description">Deslice el slider para variar la potencia entregada a los motores, de esa forma puede determinar la respuesta de los motores</string>
     <string name="azimuth_display">%1$.2f º</string>
     <string name="motor_display">%1$d%%</string>
 

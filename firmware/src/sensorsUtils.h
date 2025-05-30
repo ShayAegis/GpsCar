@@ -7,12 +7,12 @@
 #include <HardwareSerial.h>
 #include <Ultrasonic.h>
 #include <Preferences.h>
-
+#include "motorsUtils.h"
 
 const int SDA_PIN = 21;  
 const int SCL_PIN = 22;
 
-Preferences prefs;
+extern Preferences prefs;
 
 
 extern QMC5883LCompass compass;

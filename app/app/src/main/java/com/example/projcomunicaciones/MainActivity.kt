@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_main_layout)
         initToolbar()
         publishBtn=findViewById(R.id.btPublish)
         logsTV=findViewById(R.id.tvEspLogs)

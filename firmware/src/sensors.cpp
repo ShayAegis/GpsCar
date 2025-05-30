@@ -2,6 +2,7 @@
 
 float azimuth;
 QMC5883LCompass compass;
+Preferences prefs;
 
 const uint8_t gpsLed = 26;
 const int echoPin = 15;
@@ -29,12 +30,16 @@ double scalez=1;
 const uint8_t RX_GPS = 16;
 const uint8_t TX_GPS = 17;
 
+void readCalibrationValues();
+
 void startCompass(){
     Wire.begin(SDA_PIN,SCL_PIN);
     compass.init();
     readCalibrationValues();
     compass.setCalibrationOffsets(offsetx, offsety, offsetz);
     compass.setCalibrationScales(scalex, scaley, scalez);
+
+    
 }
 
 void saveCalibrationValues(){
@@ -58,12 +63,13 @@ void readCalibrationValues(){
     scalex = prefs.getDouble("scalex", 1.0);
     scaley = prefs.getDouble("scaley", 1.0);
     scalez = prefs.getDouble("scalez", 1.0);
+    Serial.printf("Calibration offsets: (%f,%f,%f) scales: (%f,%f,%f) \n",offsetx,offsety,offsetz,scalex,scaley,scalez);
     prefs.end();
 
 }
 float readCompass(){
     compass.read();
-    float orientation = fmod(compass.getAzimuth() + orientationOffset + declinacion + 360.0, 360.0);
+    float orientation = fmod(compass.getAzimuth()+270,360.0f);
     return orientation;
 }
 
@@ -103,45 +109,16 @@ float getUltrasonic(){
     }
     return sum / N;
 }
-void compassCalibrate() {
-  Serial.println("Comenzando calibración...");
-  Serial.println("Mueve el sensor en todas las direcciones durante 10 segundos");
-
-  long t0 = millis();
-  int16_t x, y, z;
-  int16_t minX = 32767, minY = 32767, minZ = 32767;
-  int16_t maxX = -32768, maxY = -32768, maxZ = -32768;
-
-  while (millis() - t0 < 10000) {  // 10 segundos
-    compass.read();
-    x = compass.getX();
-    y = compass.getY();
-    z = compass.getZ();
-
-    if (x < minX) minX = x;
-    if (y < minY) minY = y;
-    if (z < minZ) minZ = z;
-
-    if (x > maxX) maxX = x;
-    if (y > maxY) maxY = y;
-    if (z > maxZ) maxZ = z;
-
-    delay(100);
-  }
-
-  offsetx= (maxX + minX) / 2.0;
-  offsety = (maxY + minY) / 2.0;
-  offsetz = (maxZ + minZ) / 2.0;
-
-  double avgDelta = ((maxX - minX) + (maxY - minY) + (maxZ - minZ)) / 3.0;
-  scalex = avgDelta / (maxX - minX);
-  scaley = avgDelta / (maxY - minY);
-  scalez = avgDelta / (maxZ - minZ);
-
+void compassCalibrate() {   
+  calibrationTurn();
+  compass.calibrate(); 
+  stopCar();
+  offsetx=compass.getCalibrationOffset(0);
+  offsety=compass.getCalibrationOffset(1);
+  offsetz=compass.getCalibrationOffset(2);
+  scalex=compass.getCalibrationScale(0);
+  scaley=compass.getCalibrationScale(1);
+  scalez=compass.getCalibrationScale(2);
   saveCalibrationValues();
-
-  Serial.println("Calibración completa.");
-  Serial.print("Offset X: "); Serial.println(offsetx);
-  Serial.print("Offset Y: "); Serial.println(offsety);
-  Serial.print("Offset Z: "); Serial.println(offsetz);
+  ESP.restart();
 }
